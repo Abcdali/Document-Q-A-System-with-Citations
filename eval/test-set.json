@@ -1,0 +1,77 @@
+[
+  {
+    "question": "What is Week 1 Project — Job Application Intelligence Pipeline?",
+    "expectedAnswer": "A Next.js app that runs a job description and resume through a four-step LangChain pipeline (job parser, resume parser, matcher, generator) to produce a scored match report and a personalized cover letter.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is Week 2 Project — Conversational Research Agent with Live Tools?",
+    "expectedAnswer": "A Next.js chat interface where an AI agent uses web search, a Supabase knowledge-base lookup, and a calculator, with reasoning steps shown in the UI and conversation memory managed via GroqCloud.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is Week 3 Project — Document Q&A System with Citations?",
+    "expectedAnswer": "A Next.js app where users upload PDFs that get chunked, embedded, and stored in Supabase pgvector, then ask questions and receive cited answers linking back to source pages.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is Week 5 Project — Production n8n Infrastructure?",
+    "expectedAnswer": "Setting up a self-hosted n8n instance on a VPS using Docker, Caddy for HTTPS, and Postgres for persistence, with auto-restart and uptime monitoring.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What tools does the stack for the Capstone project include?",
+    "expectedAnswer": "LangSmith for evals and hub, GitHub Actions for CI/CD including nightly eval jobs, k6 for load testing, an n8n error-handling workflow, and Supabase tables for cost and error tracking.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What CRMs does the Capstone project sync data to?",
+    "expectedAnswer": "HubSpot and Zoho.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is the LangGraph pipeline order in the Capstone project?",
+    "expectedAnswer": "Researcher, Scorer, Copywriter, Reviewer, Human Approval Gate, then Publisher.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What alerts does the n8n error workflow send in the Capstone project?",
+    "expectedAnswer": "Slack alerts for errors, a cost alert if daily LLM spend exceeds $2, and an eval score drop alert if the nightly eval falls below 70%.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What must the CI/CD pipeline do on every push to main?",
+    "expectedAnswer": "Deploy the Next.js app to Vercel and import n8n workflow JSONs to the VPS, with PR checks requiring type-check, unit tests, and a passing LangSmith eval.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What must the final documentation for the Capstone include?",
+    "expectedAnswer": "A 1-page architecture decision record (ADR) explaining tool choices, documentation of API endpoints, and setup instructions someone else could follow.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What does the demo recording need to show for the Capstone?",
+    "expectedAnswer": "A 5-minute screen recording showing uploading companies, agents running, outreach appearing, CRM records being created, an n8n follow-up firing, and a LangSmith trace walkthrough.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is the chunking configuration used in Week 3's ingest pipeline?",
+    "expectedAnswer": "RecursiveCharacterTextSplitter with 800 characters per chunk and 150 character overlap.",
+    "expectedSource": "Advanced_AI_Automation_Roadmap.pdf"
+  },
+  {
+    "question": "What is Week 4 Project about?",
+    "expectedAnswer": "NOT_IN_DOCUMENT",
+    "expectedSource": "none"
+  },
+  {
+    "question": "What is the capital of France mentioned in this document?",
+    "expectedAnswer": "NOT_IN_DOCUMENT",
+    "expectedSource": "none"
+  },
+  {
+    "question": "Does the document mention a budget of $1 million for the project?",
+    "expectedAnswer": "NOT_IN_DOCUMENT",
+    "expectedSource": "none"
+  }
+]
