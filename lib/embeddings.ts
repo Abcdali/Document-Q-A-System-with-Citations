@@ -1,25 +1,27 @@
-import { pipeline, env } from "@huggingface/transformers";
-
-if (env.backends.onnx?.wasm) {
-  env.backends.onnx.wasm.numThreads = 1;
-}
-env.allowLocalModels = false;
-
-let embedder: any = null;
-
-export async function getEmbedder() {
-  if (!embedder) {
-    console.log("Loading embedding model...");
-    embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
-      device: "cpu",
-    });
-    console.log("Embedding model loaded!");
-  }
-  return embedder;
-}
-
 export async function embedText(text: string): Promise<number[]> {
-  const model = await getEmbedder();
-  const output = await model(text, { pooling: "mean", normalize: true });
-  return Array.from(output.data);
+  const result = await embedBatch([text]);
+  return result[0];
+}
+
+export async function embedBatch(texts: string[]): Promise<number[][]> {
+  const response = await fetch("https://api.cohere.com/v1/embed", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      texts,
+      model: "embed-english-light-v3.0",
+      input_type: "search_document",
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Cohere embedding failed: ${errorText}`);
+  }
+
+  const data = await response.json();
+  return data.embeddings;
 }

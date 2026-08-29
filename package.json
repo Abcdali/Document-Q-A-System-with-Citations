@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@huggingface/transformers": "^4.2.0",
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.2.9",
     "@supabase/supabase-js": "^2.112.3",

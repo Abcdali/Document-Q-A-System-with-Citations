@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { parsePdfByPages } from "@/lib/pdf-parser";
 import { chunkPages } from "@/lib/chunker";
-import { embedText } from "@/lib/embeddings";
+import { embedBatch } from "@/lib/embeddings";
 import { supabase } from "@/lib/supabase";
-export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -34,18 +36,25 @@ export async function POST(req: NextRequest) {
     }
 
     const uploadedAt = new Date().toISOString();
-    const rows = [];
 
-    for (const chunk of chunks) {
-      const embedding = await embedText(chunk.content);
-      rows.push({
-        content: chunk.content,
-        metadata: {
-          filename: file.name,
-          pageNumber: chunk.pageNumber,
-          uploadedAt,
-        },
-        embedding,
+    // Cohere ek call mein max ~96 texts leta hai, isliye batches mein todo
+    const BATCH_SIZE = 90;
+    const rows: any[] = [];
+
+    for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+      const batchChunks = chunks.slice(i, i + BATCH_SIZE);
+      const embeddings = await embedBatch(batchChunks.map((c) => c.content));
+
+      batchChunks.forEach((chunk, idx) => {
+        rows.push({
+          content: chunk.content,
+          metadata: {
+            filename: file.name,
+            pageNumber: chunk.pageNumber,
+            uploadedAt,
+          },
+          embedding: embeddings[idx],
+        });
       });
     }
 
