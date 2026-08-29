@@ -1,16 +1,19 @@
 import { pipeline, env } from "@huggingface/transformers";
 
-// Native binaries ki bajaye WASM backend force karo — serverless-safe
-env.backends.onnx.wasm.numThreads = 1;
+if (env.backends.onnx?.wasm) {
+  env.backends.onnx.wasm.numThreads = 1;
+}
 env.allowLocalModels = false;
 
 let embedder: any = null;
 
 export async function getEmbedder() {
   if (!embedder) {
+    console.log("Loading embedding model...");
     embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", {
-      device: "wasm",
+      device: "cpu",
     });
+    console.log("Embedding model loaded!");
   }
   return embedder;
 }
