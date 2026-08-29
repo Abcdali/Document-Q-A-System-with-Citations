@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { mmrRetrieve } from "@/lib/retrieve";
 import { generateAnswer } from "@/lib/generate";

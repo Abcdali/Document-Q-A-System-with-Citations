@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { parsePdfByPages } from "@/lib/pdf-parser";
 import { chunkPages } from "@/lib/chunker";
