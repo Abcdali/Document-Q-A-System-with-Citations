@@ -24,6 +24,12 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     const pages = await parsePdfByPages(buffer);
+    console.log("=== DEBUG Pages:", pages.length);
+console.log("=== DEBUG First page length:", pages[0]?.text?.length);
+console.log("=== DEBUG First page sample:", JSON.stringify(pages[0]?.text?.slice(0, 100)));
+
+  
+
 
     if (pages.length === 0) {
       return NextResponse.json({ error: "Could not extract text from PDF" }, { status: 400 });
@@ -31,13 +37,14 @@ export async function POST(req: NextRequest) {
 
     const chunks = await chunkPages(pages);
 
+    console.log("=== DEBUG: Chunks created:", chunks.length);
+
     if (chunks.length === 0) {
       return NextResponse.json({ error: "No content to index after chunking" }, { status: 400 });
     }
 
     const uploadedAt = new Date().toISOString();
 
-    // Cohere ek call mein max ~96 texts leta hai, isliye batches mein todo
     const BATCH_SIZE = 90;
     const rows: any[] = [];
 
