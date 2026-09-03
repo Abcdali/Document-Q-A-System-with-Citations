@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
-import { parsePdfByPages } from "@/lib/pdf-parser";
+import { parsePdfByPages, validatePages } from "@/lib/pdf-parser";
 import { chunkPages } from "@/lib/chunker";
 import { embedBatch } from "@/lib/embeddings";
 import { supabase } from "@/lib/supabase";
@@ -24,20 +24,18 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     const pages = await parsePdfByPages(buffer);
-    console.log("=== DEBUG Pages:", pages.length);
-console.log("=== DEBUG First page length:", pages[0]?.text?.length);
-console.log("=== DEBUG First page sample:", JSON.stringify(pages[0]?.text?.slice(0, 100)));
-
-  
-
 
     if (pages.length === 0) {
       return NextResponse.json({ error: "Could not extract text from PDF" }, { status: 400 });
     }
 
-    const chunks = await chunkPages(pages);
+    // NAYA: automatic sanity-check — koi page silently missing/incomplete to nahi
+    const { warnings } = validatePages(pages);
+    if (warnings.length > 0) {
+      console.warn("=== INGEST WARNINGS for", file.name, ":", warnings);
+    }
 
-    console.log("=== DEBUG: Chunks created:", chunks.length);
+    const chunks = await chunkPages(pages);
 
     if (chunks.length === 0) {
       return NextResponse.json({ error: "No content to index after chunking" }, { status: 400 });
@@ -73,6 +71,8 @@ console.log("=== DEBUG First page sample:", JSON.stringify(pages[0]?.text?.slice
       filename: file.name,
       pagesProcessed: pages.length,
       chunksInserted: rows.length,
+     
+      warnings: warnings.length > 0 ? warnings : undefined,
     });
   } catch (err: any) {
     console.error("Ingest error:", err);
